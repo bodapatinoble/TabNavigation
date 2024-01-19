@@ -1,7 +1,48 @@
-import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+  FlatList,
+} from 'react-native';
 function Chat() {
-  return (
+  const [users, setUsers] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  const fetchUsers = useCallback(async () => {
+    try {
+      const response = await fetch(`https://reqres.in/api/users?page=${page}`);
+      const data = await response.json();
+      setUsers(prevUsers => [...prevUsers, ...data.data]);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [page]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  const handleLoadMore = () => {
+    if (!loading) {
+      setPage(prevPage => prevPage + 1);
+    }
+  };
+
+  const renderFooter = () => {
+    return loading ? (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    ) : null;
+  };
+  const renderItem = ({item}) => (
     <View style={styles.content}>
       <View style={styles.ChatCard}>
         <TouchableOpacity style={styles.avatarContainer}>
@@ -14,30 +55,25 @@ function Chat() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.contentContainer}>
           <View style={styles.rowContainer}>
-            <Text style={styles.title}>Title</Text>
+            <Text style={styles.title}>
+              {item.first_name} {item.last_name}
+            </Text>
             <Text style={styles.timmings}>timmings</Text>
           </View>
-          <Text style={styles.subTitle}>SubTitle Title</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.ChatCard}>
-        <TouchableOpacity style={styles.avatarContainer}>
-          <Image
-            style={styles.profileImg}
-            source={{
-              uri: 'https://reactnative.dev/img/tiny_logo.png',
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.contentContainer}>
-          <View style={styles.rowContainer}>
-            <Text style={styles.title}>Title</Text>
-            <Text style={styles.timmings}>timmings</Text>
-          </View>
-          <Text style={styles.subTitle}>SubTitle Title</Text>
+          <Text style={styles.subTitle}>Email : {item.email}</Text>
         </TouchableOpacity>
       </View>
     </View>
+  );
+  return (
+    <FlatList
+      data={users}
+      keyExtractor={item => item.id.toString()}
+      renderItem={renderItem}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.1}
+      ListFooterComponent={renderFooter}
+    />
   );
 }
 const styles = StyleSheet.create({
@@ -62,8 +98,7 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: 'pink',
-    borderRadius: 5,
+    borderRadius: 2,
     width: '100%',
   },
   title: {

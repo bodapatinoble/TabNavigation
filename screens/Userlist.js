@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-const Welcome = () => {
+const USerlist = () => {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Welcome;
+export default USerlist;
