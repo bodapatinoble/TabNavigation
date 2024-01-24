@@ -1,7 +1,10 @@
+/* eslint-disable no-alert */
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react-native/no-inline-styles */
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
-import {View, Text, TouchableOpacity, Settings} from 'react-native';
+import {View, Text, TouchableOpacity, StatusBar} from 'react-native';
 import React from 'react';
 import Home from '../screens/Home';
 import Welcome from '../screens/Settings';
@@ -13,7 +16,11 @@ import USerlist from '../screens/Userlist';
 
 const Stack = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
+
+/*------------------------------------------- TAB BAR IMPLEMENTATION ----------------------------------------------------*/
 function HomeScreen() {
+  StatusBar.setBackgroundColor('#3498db');
+  StatusBar.setBarStyle('light-content');
   return (
     <TabNav.Navigator
       initialRouteName="Home"
@@ -21,10 +28,17 @@ function HomeScreen() {
         tabBarLabelPosition: 'below-icon',
         tabBarShowLabel: true,
       }}>
+      {/*------------------------------------------- HOME SCREEN ----------------------------------------------------*/}
+
       <TabNav.Screen
         name="Home"
         component={Home}
         options={{
+          headerTitle: 'Home',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#3498db', // Set your desired background color
+          },
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {
@@ -39,8 +53,28 @@ function HomeScreen() {
           tabBarIcon: ({color, size}) => (
             <Entypo name="home" size={30} color={color} />
           ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // Handle button press for Profile
+                alert('Navigate to Profile');
+                // You can navigate to the profile screen or perform any other action
+                // Example: navigation.navigate('Profile');
+              }}
+              style={{marginLeft: 16}}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  borderRadius: 15, // Adjust the border radius as needed
+                  padding: 5,
+                }}>
+                <FontAwesome name="user-circle" size={35} color="black" />
+              </View>
+            </TouchableOpacity>
+          ),
         }}
       />
+      {/*------------------------------------------- CHAT SCREEN ----------------------------------------------------*/}
       <TabNav.Screen
         name="Chat"
         component={Chat}
@@ -50,6 +84,7 @@ function HomeScreen() {
           ),
         }}
       />
+      {/*------------------------------------------- SETTINGS SCREEN ----------------------------------------------------*/}
       <TabNav.Screen
         name="Welcome"
         component={Welcome}
