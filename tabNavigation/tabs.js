@@ -19,7 +19,7 @@ const TabNav = createBottomTabNavigator();
 
 /*------------------------------------------- TAB BAR IMPLEMENTATION ----------------------------------------------------*/
 function HomeScreen() {
-  StatusBar.setBackgroundColor('#3498db');
+  StatusBar.setBackgroundColor('#a29bfe');
   StatusBar.setBarStyle('light-content');
   return (
     <TabNav.Navigator
@@ -37,7 +37,7 @@ function HomeScreen() {
           headerTitle: 'Home',
           headerTintColor: 'white',
           headerStyle: {
-            backgroundColor: '#3498db', // Set your desired background color
+            backgroundColor: '#a29bfe', // Set your desired background color
           },
           headerRight: () => (
             <TouchableOpacity
@@ -46,8 +46,9 @@ function HomeScreen() {
                 alert('Well catch up later ');
                 Firebase_Auth.signOut();
               }}
-              style={{marginRight: 16}}>
-              <Text>LogOut</Text>
+              style={{marginRight: 10}}>
+              <FontAwesome name="logout" size={30} color="black" />
+              <Text style={{marginRight: 0}}>LogOut</Text>
             </TouchableOpacity>
           ),
           tabBarIcon: ({color, size}) => (
@@ -68,7 +69,7 @@ function HomeScreen() {
                   borderRadius: 15, // Adjust the border radius as needed
                   padding: 5,
                 }}>
-                <FontAwesome name="user-circle" size={35} color="black" />
+                <FontAwesome name="user-circle" size={35} color="#a29bfe" />
               </View>
             </TouchableOpacity>
           ),

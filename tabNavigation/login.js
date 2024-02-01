@@ -69,13 +69,13 @@ function loginScreen() {
       <TextInput
         style={styles.input}
         placeholder="Username"
-        placeholderTextColor="#3498db"
+        placeholderTextColor="#a29bfe"
         onChangeText={text => setUsername(text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
-        placeholderTextColor="#7f8c8d"
+        placeholderTextColor="#a29bfe"
         secureTextEntry={true}
         onChangeText={text => setPassword(text)}
       />
@@ -98,14 +98,14 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     width: '80%',
-    borderColor: '#3498db',
+    borderColor: '#a29bfe',
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,
-    color: '#3498db', // Text color
+    color: '#a29bfe', // Text color
   },
   button: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#a29bfe',
     padding: 10,
     borderRadius: 5,
     width: '80%',
