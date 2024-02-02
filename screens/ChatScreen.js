@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   ChatCard: {
     height: 65,
     flexDirection: 'row',
-    backgroundColor: 'skyblue',
+    backgroundColor: '#a29bfe',
     borderRadius: 10,
     marginVertical: 5,
   },

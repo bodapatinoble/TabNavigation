@@ -8,6 +8,7 @@ import {View, Text, TouchableOpacity, StatusBar} from 'react-native';
 import React from 'react';
 import Home from '../screens/Home';
 import Welcome from '../screens/Settings';
+import Categories from '../screens/Categories';
 import Chat from '../screens/ChatScreen';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -38,6 +39,14 @@ function HomeScreen() {
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#a29bfe', // Set your desired background color
+            shadowColor: 'purple',
+            shadowOffset: {
+              width: 5,
+              height: 15,
+            },
+            shadowOpacity: 1,
+            shadowRadius: 25,
+            elevation: 9,
           },
           headerRight: () => (
             <TouchableOpacity
@@ -75,11 +84,36 @@ function HomeScreen() {
           ),
         }}
       />
+      {/*------------------------------------------- Category SCREEN ----------------------------------------------------*/}
+      <TabNav.Screen
+        name="Category"
+        component={Categories}
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <FontAwesome name="list" size={25} color={color} />
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                // Handle button press for Screen1
+                alert('Well catch up later ');
+              }}
+              style={{marginRight: 15}}>
+              <Entypo name="add-to-list" size={30} color="black" />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       {/*------------------------------------------- CHAT SCREEN ----------------------------------------------------*/}
       <TabNav.Screen
         name="Chat"
         component={Chat}
         options={{
+          headerTitle: 'Chat',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#a29bfe', // Set your desired background color
+          },
           tabBarIcon: ({color, size}) => (
             <Entypo name="chat" size={30} color={color} />
           ),
