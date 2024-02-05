@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, FlatList} from 'react-native';
+import {useNavigation} from '@react-navigation/native'; // Import navigation hook
+
 import Entypo from 'react-native-vector-icons/Entypo';
 const data = [
   {id: '1', iconName: 'tools', title: 'Gadgets'},
@@ -13,8 +15,13 @@ const data = [
 ];
 
 const CategoryCard = ({iconName, title}) => {
+  const navigation = useNavigation();
+
+  const onPressHandler = () => {
+    navigation.navigate('ListCategories');
+  };
   return (
-    <TouchableOpacity style={styles.cardContainer}>
+    <TouchableOpacity style={styles.cardContainer} onPress={onPressHandler}>
       <Entypo name={iconName} size={50} color="white" />
       <Text style={styles.title}>{title}</Text>
     </TouchableOpacity>
@@ -52,7 +59,7 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2, // for Android shadow
     shadowColor: '#a29bfe',
-   // shadowColor: '#000', // for iOS shadow
+    // shadowColor: '#000', // for iOS shadow
     shadowOpacity: 0.2, // for iOS shadow
     shadowOffset: {width: 0, height: 2}, // for iOS shadow
     shadowRadius: 2, // for iOS shadow
