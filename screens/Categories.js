@@ -4,21 +4,22 @@ import {useNavigation} from '@react-navigation/native'; // Import navigation hoo
 
 import Entypo from 'react-native-vector-icons/Entypo';
 const data = [
-  {id: '1', iconName: 'tools', title: 'Gadgets'},
-  {id: '2', iconName: 'medal', title: 'Jewelary'},
-  {id: '3', iconName: 'aircraft-take-off', title: 'Bikes'},
-  {id: '4', iconName: 'colours', title: 'Art'},
-  {id: '5', iconName: 'suitcase', title: 'Cosmetics'},
-  {id: '6', iconName: 'price-ribbon', title: 'Clothes'},
+  {id: '1', iconName: 'tools', title: 'Gadgets', type: 'Gadgets'},
+  {id: '2', iconName: 'medal', title: 'Jewelary', type: 'Jewelary'},
+  {id: '3', iconName: 'aircraft-take-off', title: 'Bikes', type: 'Bikes'},
+  {id: '4', iconName: 'colours', title: 'Art', type: 'Art'},
+  {id: '5', iconName: 'suitcase', title: 'Cosmetics', type: 'Cosmetics'},
+  {id: '6', iconName: 'price-ribbon', title: 'Clothes', type: 'Clothes'},
 
   // Add more items as needed
 ];
 
-const CategoryCard = ({iconName, title}) => {
+const CategoryCard = ({iconName, title, type}) => {
   const navigation = useNavigation();
 
   const onPressHandler = () => {
-    navigation.navigate('ListCategories');
+    console.log('Navigating to ListCategories with type:', type);
+    navigation.navigate('ListCategories', {type: type});
   };
   return (
     <TouchableOpacity style={styles.cardContainer} onPress={onPressHandler}>
@@ -29,7 +30,11 @@ const CategoryCard = ({iconName, title}) => {
 };
 const Categories = () => {
   const renderCategoryCard = ({item}) => (
-    <CategoryCard iconName={item.iconName} title={item.title} />
+    <CategoryCard
+      iconName={item.iconName}
+      title={item.title}
+      type={item.type}
+    />
   );
 
   return (
