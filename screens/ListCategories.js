@@ -5,7 +5,8 @@ import {
   TextInput,
   StyleSheet,
   Image,
-  ScrollView,
+  FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {
@@ -16,22 +17,25 @@ import {
   addDoc,
   getDocs,
 } from '../FirebaseConfig';
+import AddItemModal from './AddItemModal';
 
 const ListCategories = () => {
   const [title, setTitle] = useState('');
   const [shoppingItems, setShoppingItems] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false); // State for controlling the visibility of the modal
   const route = useRoute();
   const {type} = route.params;
   // console.log('Type:', type);
-  const addshoppingItem = async () => {
+  const addshoppingItem = async newItem => {
+    console.log('Item added:', newItem);
     try {
-      if (title.trim() !== '') {
-        const docRef = await addDoc(collection(Firebase_DB, 'shopping'), {
-          title: title,
-          //  isChecked: false,
-          type: type,
-        });
-        console.log('Document written with ID: ', docRef.id, docRef.data());
+      if (newItem && typeof newItem === 'object') {
+        console.log('Item added:', newItem);
+        const docRef = await addDoc(
+          collection(Firebase_DB, 'shopping'),
+          newItem,
+        );
+        console.log('Document written with ID: ', docRef.id);
         setTitle('');
         getShoppingItems();
       }
@@ -40,14 +44,22 @@ const ListCategories = () => {
     }
   };
   const getShoppingItems = useCallback(async () => {
-    const querySnapshot = await getDocs(collection(Firebase_DB, 'shopping'));
-    const items = [];
-    querySnapshot.forEach(doc => {
-      if (doc.data().type === type) {
-        items.push({id: doc.id, data: doc.data()});
-      }
-    });
-    setShoppingItems(items);
+    try {
+      const querySnapshot = await getDocs(collection(Firebase_DB, 'shopping'));
+      console.log('Query Snapshot:', querySnapshot);
+
+      const items = [];
+      querySnapshot.forEach(doc => {
+        console.log('Document Data:', doc.data());
+        if (doc.data().type === type) {
+          items.push({id: doc.id, data: doc.data()});
+        }
+      });
+      console.log('Items:', items);
+      setShoppingItems(items);
+    } catch (e) {
+      console.error('Error fetching shopping items: ', e);
+    }
   }, [type]);
   useEffect(() => {
     const fetchData = async () => {
@@ -55,41 +67,66 @@ const ListCategories = () => {
     };
     fetchData();
   }, [type, getShoppingItems]);
-  return (
-    <ScrollView>
-      <View style={styles.content}>
-        <Text>You List is in working progess</Text>
-        {shoppingItems.map(item => (
-          <View key={item.id} style={styles.card}>
-            <Image source={item.Image} style={styles.image} />
-            <View style={styles.details}>
-              <Text style={styles.title}>{item.data.title}</Text>
-              <Text style={styles.description}>description</Text>
-              <View style={styles.ratingContainer}>
-                <Text style={styles.rating}>Rating: {item.data.title}</Text>
-              </View>
-              <Text> Title : {item.data.title}</Text>
-              {/* Assuming 'name' is a property in your shopping item data */}
-              <Text style={styles.price}>{item.data.price}</Text>
-              {/* Assuming 'price' is a property in your shopping item data */}
-              {/* Add other properties as needed */}
-              <Text style={styles.discount}>Discount: {item.data.title}%</Text>
-            </View>
-          </View>
-        ))}
-        <TextInput
-          style={styles.input}
-          placeholder="Type Any thing "
-          value={title}
-          onChangeText={text => setTitle(text)}
-          onSubmitEditing={() => {
-            if (title.trim() !== '') {
-              addshoppingItem();
-            }
-          }}
-        />
+
+  const renderItem = ({item}) => (
+    <TouchableOpacity key={item.id} style={styles.card}>
+      <Image source={item.data.Image} style={styles.image} />
+      <View style={styles.details}>
+        <Text style={styles.title}>{item.data.title}</Text>
+        <Text style={styles.description}>description</Text>
+        <View style={styles.ratingContainer}>
+          <Text style={styles.rating}>Rating: {item.data.rating}</Text>
+        </View>
+        <Text> Title : {item.data.title}</Text>
+        <Text style={styles.price}>{item.data.price}</Text>
+        <Text style={styles.discount}>Discount: {item.data.discount}%</Text>
       </View>
-    </ScrollView>
+    </TouchableOpacity>
+  );
+
+  return (
+    <FlatList
+      data={shoppingItems}
+      renderItem={renderItem}
+      keyExtractor={item => item.id}
+      ListHeaderComponent={
+        <View style={styles.content}>
+          <Text>Your List is in working progress</Text>
+        </View>
+      }
+      ListFooterComponent={
+        <View style={styles.content}>
+          <TextInput
+            style={styles.input}
+            placeholder="Type Anything"
+            value={title}
+            onChangeText={text => setTitle(text)}
+            onSubmitEditing={() => {
+              if (title.trim() !== '') {
+                addshoppingItem();
+              }
+            }}
+          />
+          {/* AddItem button */}
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => setModalVisible(true)}>
+            <Text style={styles.buttontext}>Add Item</Text>
+          </TouchableOpacity>
+          {/* AddItemModal component */}
+          <AddItemModal
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onAddItem={newItem => {
+              newItem.type = type;
+              console.log('Item added:', newItem);
+              addshoppingItem(newItem);
+              setModalVisible(false);
+            }}
+          />
+        </View>
+      }
+    />
   );
 };
 export default ListCategories;
@@ -108,6 +145,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 10,
     color: '#a29bfe', // Text color
+    alignItems: 'center',
   },
   button: {
     backgroundColor: '#a29bfe',
@@ -149,12 +187,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
+    color: 'black',
   },
   description: {
     marginBottom: 5,
+    color: 'black',
   },
   ratingContainer: {
     marginBottom: 5,
+    color: 'black',
   },
   rating: {
     color: 'orange',
@@ -162,8 +203,21 @@ const styles = StyleSheet.create({
   price: {
     fontWeight: 'bold',
     marginBottom: 5,
+    color: 'black',
   },
   discount: {
     color: 'green',
+  },
+  addButton: {
+    backgroundColor: 'blue',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginVertical: 20,
+  },
+  buttontext: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
