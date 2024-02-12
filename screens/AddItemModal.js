@@ -13,6 +13,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker'; // I
 const AddItemModal = ({visible, onClose, onAddItem}) => {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
+  const [discount, setDiscount] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null); // State to store the selected image URI
 
@@ -80,6 +81,12 @@ const AddItemModal = ({visible, onClose, onAddItem}) => {
             placeholder="Price"
             value={price}
             onChangeText={text => setPrice(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Discount"
+            value={discount}
+            onChangeText={text => setDiscount(text)}
           />
           <TextInput
             style={[styles.input, {height: 100}]}

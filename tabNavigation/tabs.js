@@ -15,6 +15,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {Firebase_Auth} from '../FirebaseConfig';
 import USerlist from '../screens/Userlist';
+import FullDetailsScreen from '../screens/FullDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
@@ -143,6 +144,7 @@ function HomeScreen() {
       <Stack.Screen name="ListCategories" component={ListCategories} />
       <Stack.Screen name="ChatScreen" component={Chat} />
       <Stack.Screen name="Userlist" component={USerlist} />
+      <Stack.Screen name="FullDetailsScreen" component={FullDetailsScreen} />
     </Stack.Navigator>
   );
 }

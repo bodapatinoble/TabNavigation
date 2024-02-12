@@ -8,7 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, useNavigation} from '@react-navigation/native';
 import {
   Firebase_Auth,
   getFirestore,
@@ -24,6 +24,7 @@ const ListCategories = () => {
   const [shoppingItems, setShoppingItems] = useState([]);
   const [modalVisible, setModalVisible] = useState(false); // State for controlling the visibility of the modal
   const route = useRoute();
+  const navigation = useNavigation();
   const {type} = route.params;
   // console.log('Type:', type);
   const addshoppingItem = async newItem => {
@@ -67,28 +68,51 @@ const ListCategories = () => {
     };
     fetchData();
   }, [type, getShoppingItems]);
-
-  const renderItem = ({item}) => (
-    <TouchableOpacity key={item.id} style={styles.card}>
-      <Image source={item.data.Image} style={styles.image} />
-      <View style={styles.details}>
-        <Text style={styles.title}>{item.data.title}</Text>
-        <Text style={styles.description}>description</Text>
-        <View style={styles.ratingContainer}>
-          <Text style={styles.rating}>Rating: {item.data.rating}</Text>
-        </View>
-        <Text> Title : {item.data.title}</Text>
-        <Text style={styles.price}>{item.data.price}</Text>
-        <Text style={styles.discount}>Discount: {item.data.discount}%</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const onPressHandler = item => {
+    console.log('Navigating to FullScreen withr type:', item.title);
+    navigation.navigate('FullDetailsScreen');
+  };
+  const renderItem = ({item}) => {
+    console.log('sdagfdfdsfdsfdsfdsff Prashanth --------', item);
+    return (
+      <>
+        <TouchableOpacity
+          key={item.id}
+          style={styles.card}
+          onPress={onPressHandler(item.data)}>
+          <Image
+            source={
+              item.data.image === null
+                ? require('../assets/imgpr.jpeg')
+                : {
+                    uri: item.data.image,
+                    cache: 'reload', // Optionally force reload the image
+                  }
+            }
+            style={styles.image}
+          />
+          <View style={styles.details}>
+            <Text style={styles.title}>{item.data.title}</Text>
+            <Text style={styles.description}>
+              Description:{item.data.description}
+            </Text>
+            <View style={styles.ratingContainer}>
+              <Text style={styles.rating}>Price: {item.data.price}</Text>
+            </View>
+            <Text style={styles.price}>{item.data.price}</Text>
+            <Text style={styles.discount}>Discount: {item.data.discount}%</Text>
+          </View>
+        </TouchableOpacity>
+      </>
+    );
+  };
 
   return (
     <FlatList
       data={shoppingItems}
-      renderItem={renderItem}
       keyExtractor={item => item.id}
+      renderItem={renderItem}
+      //   onPress={onPressHandler(item)}
       ListHeaderComponent={
         <View style={styles.content}>
           <Text>Your List is in working progress</Text>
@@ -175,8 +199,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
     borderRadius: 5,
     marginRight: 10,
   },
