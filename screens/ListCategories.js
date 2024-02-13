@@ -68,9 +68,9 @@ const ListCategories = () => {
     };
     fetchData();
   }, [type, getShoppingItems]);
-  const onPressHandler = item => {
-    console.log('Navigating to FullScreen withr type:', item.title);
-    navigation.navigate('FullDetailsScreen');
+  const onPressHandler = () => {
+    console.log('Navigating to FullScreen withr type:');
+    //  navigation.navigate('FullDetailsScreen');
   };
   const renderItem = ({item}) => {
     console.log('sdagfdfdsfdsfdsfdsff Prashanth --------', item);
@@ -79,7 +79,7 @@ const ListCategories = () => {
         <TouchableOpacity
           key={item.id}
           style={styles.card}
-          onPress={onPressHandler(item.data)}>
+          onPress={onPressHandler}>
           <Image
             source={
               item.data.image === null
@@ -111,8 +111,45 @@ const ListCategories = () => {
     <FlatList
       data={shoppingItems}
       keyExtractor={item => item.id}
-      renderItem={renderItem}
-      //   onPress={onPressHandler(item)}
+      // renderItem={renderItem}
+      renderItem={({item}) => {
+        return (
+          <>
+            <TouchableOpacity
+              key={item.id}
+              style={styles.card}
+              onPress={() => {
+                console.log('Navigating to FullScreen withr type:', item.data);
+                //  navigation.navigate('FullDetailsScreen');
+              }}>
+              <Image
+                source={
+                  item.data.image === null
+                    ? require('../assets/imgpr.jpeg')
+                    : {
+                        uri: item.data.image,
+                        cache: 'reload', // Optionally force reload the image
+                      }
+                }
+                style={styles.image}
+              />
+              <View style={styles.details}>
+                <Text style={styles.title}>{item.data.title}</Text>
+                <Text style={styles.description}>
+                  Description:{item.data.description}
+                </Text>
+                <View style={styles.ratingContainer}>
+                  <Text style={styles.rating}>Price: {item.data.price}</Text>
+                </View>
+                <Text style={styles.price}>{item.data.price}</Text>
+                <Text style={styles.discount}>
+                  Discount: {item.data.discount}%
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </>
+        );
+      }}
       ListHeaderComponent={
         <View style={styles.content}>
           <Text>Your List is in working progress</Text>
