@@ -15,6 +15,9 @@ const AddItemModal = ({visible, onClose, onAddItem}) => {
   const [price, setPrice] = useState('');
   const [discount, setDiscount] = useState('');
   const [description, setDescription] = useState('');
+  const [NumOfAvailableItems, setNumOfAvailableItems] = useState('');
+  const [isAvailable, setisAvailable] = useState('');
+  const [isDeleted, setisDeleted] = useState('');
   const [image, setImage] = useState(null); // State to store the selected image URI
 
   // Function to handle image selection
@@ -45,11 +48,24 @@ const AddItemModal = ({visible, onClose, onAddItem}) => {
       price.trim() !== '' &&
       description.trim() !== ''
     ) {
-      onAddItem({title, price, description, image});
+      onAddItem({
+        title,
+        price,
+        description,
+        image,
+        discount,
+        NumOfAvailableItems,
+        isAvailable,
+        isDeleted,
+      });
       // Clear input fields
       setTitle('');
       setPrice('');
       setDescription('');
+      setDiscount('');
+      setNumOfAvailableItems('');
+      setisAvailable('');
+      setisDeleted('');
       setImage(null);
     }
   };
@@ -81,6 +97,12 @@ const AddItemModal = ({visible, onClose, onAddItem}) => {
             placeholder="Price"
             value={price}
             onChangeText={text => setPrice(text)}
+          />
+           <TextInput
+            style={styles.input}
+            placeholder="Number Of Items"
+            value={NumOfAvailableItems}
+            onChangeText={text => setNumOfAvailableItems(text)}
           />
           <TextInput
             style={styles.input}

@@ -68,45 +68,6 @@ const ListCategories = () => {
     };
     fetchData();
   }, [type, getShoppingItems]);
-  const onPressHandler = () => {
-    console.log('Navigating to FullScreen withr type:');
-    //  navigation.navigate('FullDetailsScreen');
-  };
-  const renderItem = ({item}) => {
-    console.log('sdagfdfdsfdsfdsfdsff Prashanth --------', item);
-    return (
-      <>
-        <TouchableOpacity
-          key={item.id}
-          style={styles.card}
-          onPress={onPressHandler}>
-          <Image
-            source={
-              item.data.image === null
-                ? require('../assets/imgpr.jpeg')
-                : {
-                    uri: item.data.image,
-                    cache: 'reload', // Optionally force reload the image
-                  }
-            }
-            style={styles.image}
-          />
-          <View style={styles.details}>
-            <Text style={styles.title}>{item.data.title}</Text>
-            <Text style={styles.description}>
-              Description:{item.data.description}
-            </Text>
-            <View style={styles.ratingContainer}>
-              <Text style={styles.rating}>Price: {item.data.price}</Text>
-            </View>
-            <Text style={styles.price}>{item.data.price}</Text>
-            <Text style={styles.discount}>Discount: {item.data.discount}%</Text>
-          </View>
-        </TouchableOpacity>
-      </>
-    );
-  };
-
   return (
     <FlatList
       data={shoppingItems}
@@ -120,7 +81,9 @@ const ListCategories = () => {
               style={styles.card}
               onPress={() => {
                 console.log('Navigating to FullScreen withr type:', item.data);
-                //  navigation.navigate('FullDetailsScreen');
+                navigation.navigate('FullDetailsScreen', {
+                  item: item,
+                });
               }}>
               <Image
                 source={
@@ -138,36 +101,33 @@ const ListCategories = () => {
                 <Text style={styles.description}>
                   Description:{item.data.description}
                 </Text>
-                <View style={styles.ratingContainer}>
-                  <Text style={styles.rating}>Price: {item.data.price}</Text>
-                </View>
-                <Text style={styles.price}>{item.data.price}</Text>
                 <Text style={styles.discount}>
-                  Discount: {item.data.discount}%
+                  Discount: ${item.data.discount} off
                 </Text>
+                <Text style={styles.rating}>
+                  NumOfAvailableItems: {item.data.NumOfAvailableItems}
+                </Text>
+                <View style={styles.ratingContainer}>
+                  <Text style={styles.price}>
+                    Price: Rs.{item.data.price - item.data.discount}
+                  </Text>
+                </View>
               </View>
             </TouchableOpacity>
           </>
         );
       }}
-      ListHeaderComponent={
+      ListHeaderComponent={({items}) => {
         <View style={styles.content}>
-          <Text>Your List is in working progress</Text>
-        </View>
-      }
+          {
+            <Text>
+              {items == null ? 'Your List is in working progress' : 'No item '}
+            </Text>
+          }
+        </View>;
+      }}
       ListFooterComponent={
         <View style={styles.content}>
-          <TextInput
-            style={styles.input}
-            placeholder="Type Anything"
-            value={title}
-            onChangeText={text => setTitle(text)}
-            onSubmitEditing={() => {
-              if (title.trim() !== '') {
-                addshoppingItem();
-              }
-            }}
-          />
           {/* AddItem button */}
           <TouchableOpacity
             style={styles.addButton}
@@ -197,16 +157,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     //backgroundColor: 'purple',
-  },
-  input: {
-    height: 40,
-    width: '80%',
-    borderColor: '#a29bfe',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingLeft: 10,
-    color: '#a29bfe', // Text color
-    alignItems: 'center',
   },
   button: {
     backgroundColor: '#a29bfe',
@@ -264,20 +214,22 @@ const styles = StyleSheet.create({
   price: {
     fontWeight: 'bold',
     marginBottom: 5,
-    color: 'black',
+    color: 'red',
   },
   discount: {
     color: 'green',
   },
   addButton: {
-    backgroundColor: 'blue',
+    backgroundColor: '#a29bfe',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     alignSelf: 'center',
     marginVertical: 20,
+    width: '70%',
   },
   buttontext: {
+    textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
   },
