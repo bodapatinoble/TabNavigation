@@ -98,7 +98,7 @@ const AddItemModal = ({visible, onClose, onAddItem}) => {
             value={price}
             onChangeText={text => setPrice(text)}
           />
-           <TextInput
+          <TextInput
             style={styles.input}
             placeholder="Number Of Items"
             value={NumOfAvailableItems}
