@@ -10,13 +10,15 @@ import {
   Modal,
   Animated,
 } from 'react-native';
+import GIF from 'react-native-gif';
 const FullDetailsScreen = ({route}) => {
   const {description, price, image, type, title, NumOfAvailableItems} =
     route.params.item.data;
   console.log(
     'afssdfsdfadsf534-----------------.........>>>>>',
-    route.params.item.data,
+    route.params.item.id,
   );
+
   const [numOfAvailableItems, setNumOfAvailableItems] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const animatedValue = new Animated.Value(0);
@@ -37,11 +39,11 @@ const FullDetailsScreen = ({route}) => {
   };
   const openModal = () => {
     setModalVisible(true);
-    Animated.timing(animatedValue, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    // Animated.timing(animatedValue, {
+    //   toValue: 1,
+    //   duration: 300,
+    //   useNativeDriver: true,
+    // }).start();
   };
 
   const closeModal = () => {
@@ -56,10 +58,15 @@ const FullDetailsScreen = ({route}) => {
     inputRange: [0, 1],
     outputRange: [600, 0],
   });
-
+  console.log('testing gfdgdf', modalVisible);
   return (
     <>
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={
+          modalVisible
+            ? [styles.container, {backgroundColor: 'rgba(0, 0, 0, 0.5)'}]
+            : styles.container
+        }>
         <Image
           source={
             image === null
@@ -107,27 +114,48 @@ const FullDetailsScreen = ({route}) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}>
-      <TouchableOpacity
+      {modalVisible === true ? (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={closeModal}>
+          <TouchableOpacity
             style={styles.modalOverlay}
             activeOpacity={1}
             onPress={closeModal}>
-          <Animated.View
-            style={[
-              styles.modalContainer,
-              {transform: [{translateY: translateY}]},
-            ]}>
-            <Text style={styles.modalText}>Item added to cart!</Text>
-            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </TouchableOpacity>
-      </Modal>
+            <Animated.View
+              //  style={{transform: [{translateY: translateY}]}}
+
+              style={[
+                styles.modalContainer,
+                {transform: [{translateY: translateY}]},
+              ]}>
+              <Text style={styles.modalText}>Item added to cart!</Text>
+              <Image
+                source={
+                  image === null
+                    ? require('../assets/cart.png')
+                    : // {
+                      //   uri: 'https://mydayquality.mydrreddys.com/images/successIconAnim-m.3f430a.gif',
+                      //   cache: 'reload',
+                      // }
+                      {
+                        uri: 'https://mydayquality.mydrreddys.com/images/successIconAnim-m.3f430a.gif',
+                        cache: 'reload',
+                      }
+                }
+                style={styles.gif}
+              />
+              <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </Animated.View>
+          </TouchableOpacity>
+        </Modal>
+      ) : (
+        <View></View>
+      )}
     </>
   );
 };
@@ -140,6 +168,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     resizeMode: 'cover',
+    marginBottom: 20,
+  },
+  gif: {
+    width: '100%',
+    height: 200,
     marginBottom: 20,
   },
   detailsContainer: {
@@ -231,17 +264,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   modalOverlay: {
-    flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContainer: {
+    bottom: 270, // Adjust this value based on the height of your tab bar
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 10,
     elevation: 5,
-    color: 'red',
+    width: '90%',
   },
   modalText: {
     fontSize: 18,

@@ -80,7 +80,7 @@ const ListCategories = () => {
               key={item.id}
               style={styles.card}
               onPress={() => {
-                console.log('Navigating to FullScreen withr type:', item.data);
+                console.log('Navigating to FullScreen withr type:', item);
                 navigation.navigate('FullDetailsScreen', {
                   item: item,
                 });
@@ -234,13 +234,13 @@ const styles = StyleSheet.create({
   },
   price: {
     fontWeight: 'bold',
-   // marginBottom: 5,
+    // marginBottom: 5,
     color: 'black',
     // backgroundColor: 'red',
-     borderRadius: 5,
+    borderRadius: 5,
     // width: '35%',
     // textAlign: 'center',
-     fontSize: 18,
+    fontSize: 18,
   },
   discount: {
     color: 'white',
