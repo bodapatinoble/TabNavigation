@@ -9,10 +9,54 @@ import {
   TouchableOpacity,
   Modal,
   Animated,
+  Alert,
 } from 'react-native';
-import GIF from 'react-native-gif';
+import {
+  Firebase_Auth,
+  Firebase_DB,
+  doc,
+  getDocs,
+  getDoc,
+} from '../FirebaseConfig';
+// Function to fetch document data from Firestore based on its ID
+async function fetchDocumentData(documentId, AssignednumOfAvailableItems) {
+  try {
+    const documentRef = doc(Firebase_DB, 'shopping', documentId);
+    const documentSnapshot = await getDoc(documentRef);
+
+    if (documentSnapshot.exists()) {
+      const documentData = documentSnapshot.data();
+      console.log('Document data:', documentData);
+      addToCart(documentData, documentId, AssignednumOfAvailableItems);
+    } else {
+      console.log('Document not found!');
+    }
+  } catch (error) {
+    console.error('Error fetching document:', error);
+  }
+}
+let cartList = []; // Array to store cart items in memory
+
+// Function to add item to cart list or update quantity if item already exists
+function addToCart(item, itemId, AssignednumOfAvailableItems) {
+  // Check if item with same ID exists in cart list
+  const existingItemIndex = cartList.findIndex(
+    cartItem => cartItem.id === itemId,
+  );
+  item.quantity = AssignednumOfAvailableItems;
+  if (existingItemIndex !== -1) {
+    // If item already exists, update its quantity
+    cartList[existingItemIndex].quantity = item.quantity;
+    console.log('Item quantity updated in cart list.', cartList);
+  } else {
+    // If item doesn't exist, add it to the cart list
+    item.id = itemId;
+    cartList.push(item);
+    console.log('Item added to cart list.', item);
+  }
+}
 const FullDetailsScreen = ({route}) => {
-  const {description, price, image, type, title, NumOfAvailableItems} =
+  const {description, price, image, type, title, TotalNumOfAvailableItems} =
     route.params.item.data;
   console.log(
     'afssdfsdfadsf534-----------------.........>>>>>',
@@ -22,7 +66,15 @@ const FullDetailsScreen = ({route}) => {
   const [numOfAvailableItems, setNumOfAvailableItems] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const animatedValue = new Animated.Value(0);
-
+  const createTwoButtonAlert = () =>
+    Alert.alert('Alert Title', 'My Alert Msg', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
   const decreaseAvailableItems = () => {
     if (numOfAvailableItems > 0) {
       setNumOfAvailableItems(
@@ -32,13 +84,16 @@ const FullDetailsScreen = ({route}) => {
   };
 
   const increaseAvailableItems = () => {
-    if (numOfAvailableItems == NumOfAvailableItems) {
+    if (numOfAvailableItems == TotalNumOfAvailableItems) {
+      createTwoButtonAlert();
     } else {
       setNumOfAvailableItems(numOfAvailableItems + 1);
     }
   };
   const openModal = () => {
     setModalVisible(true);
+    fetchDocumentData(route.params.item.id, numOfAvailableItems);
+
     // Animated.timing(animatedValue, {
     //   toValue: 1,
     //   duration: 300,
@@ -83,7 +138,8 @@ const FullDetailsScreen = ({route}) => {
           </View>
           <Text style={styles.description}>{description}</Text>
           <Text style={styles.availabilityContainer}>
-            Remaining Items {NumOfAvailableItems - numOfAvailableItems} Left
+            Remaining Items {TotalNumOfAvailableItems - numOfAvailableItems}{' '}
+            Left
           </Text>
           <View style={styles.quantityContainer}>
             <TouchableOpacity
