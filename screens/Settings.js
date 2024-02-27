@@ -6,8 +6,11 @@ import {
   ActivityIndicator,
   StyleSheet,
   TextInput,
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
 import filter from 'lodash.filter';
+import UserDetailsModal from '../screens/UserDetailsModal'; // Import the UserDetailsModal component
 
 const Welcome = () => {
   const [users, setUsers] = useState([]);
@@ -35,6 +38,46 @@ const Welcome = () => {
       return contains(user, formattedQuery);
     });
     setUsers(filteredData);
+  };
+
+  const extraFieldsMap = {
+    1: {
+      Role: 'Associate Analyst',
+      Skills: 'Javascript, Python, .Net, SwiftUI frameworks',
+      ProjectStatus: 'Client Name',
+      ProjectHistory: 'Clients list',
+    },
+    2: {
+      Role: 'Senior Analyst',
+      Skills: 'Java, C#, SQL',
+      ProjectStatus: 'Project Alpha',
+      ProjectHistory: 'Project Beta',
+    },
+    3: {
+      Role: 'Associate Analyst',
+      Skills: 'Javascript, Python, .Net, SwiftUI frameworks',
+      ProjectStatus: 'Client Name',
+      ProjectHistory: 'Clients list',
+    },
+    4: {
+      Role: 'Senior Analyst',
+      Skills: 'Java, C#, SQL',
+      ProjectStatus: 'Project Alpha',
+      ProjectHistory: 'Project Beta',
+    },
+    5: {
+      Role: 'Associate Analyst',
+      Skills: 'Javascript, Python, .Net, SwiftUI frameworks',
+      ProjectStatus: 'Client Name',
+      ProjectHistory: 'Clients list',
+    },
+    6: {
+      Role: 'Senior Analyst',
+      Skills: 'Java, C#, SQL',
+      ProjectStatus: 'Project Alpha',
+      ProjectHistory: 'Project Beta',
+    },
+    // Add more fields for other IDs as needed
   };
 
   const fetchUsers = useCallback(async () => {
@@ -69,14 +112,36 @@ const Welcome = () => {
     ) : null;
   };
 
-  const renderItem = ({item}) => (
-    <View style={styles.userContainer}>
-      <Text style={styles.textStyle}>
-        {item.first_name} {item.last_name}
-      </Text>
-      <Text>Email: {item.email}</Text>
-    </View>
-  );
+  const renderItem = ({item}) => {
+    console.log('Rendering item:', item);
+    return (
+      <TouchableOpacity
+        onPress={() => showAlert(item)}
+        style={styles.userContainer}>
+        <Text style={styles.textStyle}>
+          {item.first_name} {item.last_name}
+        </Text>
+        <Text style={styles.textStyle}>Email: {item.email}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const showAlert = item => {
+    // // console.log('Showing alert for:', item);
+    // // Alert.alert('Hi ' + item.first_name);
+    // const mergedItem = {...item, ...extraFieldsMap[item.id]};
+
+    // // Construct alert message with merged item
+    // const alertMessage = Object.entries(mergedItem)
+    //   .map(([key, value]) => `${key}: ${value}`)
+    //   .join('\n');
+    // Alert.alert('User Details', alertMessage);
+    setSelectedItem(item);
+    setShowModal(true);
+  };
 
   return (
     <View style={styles.container}>
@@ -98,6 +163,14 @@ const Welcome = () => {
         ListFooterComponent={renderFooter}
         style={{marginTop: 10}} // Add margin between TextInput and FlatList
       />
+      {showModal && (
+        <UserDetailsModal
+          visible={showModal}
+          onClose={() => setShowModal(false)}
+          item={selectedItem}
+          extraFields={extraFieldsMap[selectedItem.id]}
+        />
+      )}
     </View>
   );
 };
@@ -112,6 +185,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'white',
     backgroundColor: '#a29bfe',
     margin: 2,
+    borderRadius: 10,
     shadowColor: '#a29bfe', // Soft shadow
     shadowOffset: {
       width: 0,

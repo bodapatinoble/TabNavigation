@@ -11,6 +11,7 @@ import Welcome from '../screens/Settings';
 import Categories from '../screens/Categories';
 import ListCategories from '../screens/ListCategories';
 import Chat from '../screens/ChatScreen';
+import DashboardArticle from '../screens/DashboardArticle';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {Firebase_Auth} from '../FirebaseConfig';
@@ -126,6 +127,16 @@ function Tabs() {
         <TabNav.Screen
           name="Welcome"
           component={Welcome}
+          options={{
+            tabBarIcon: ({color, size}) => (
+              <Entypo name="chat" size={30} color={color} />
+            ),
+          }}
+        />
+        {/*------------------------------------------- Articles SCREEN ----------------------------------------------------*/}
+        <TabNav.Screen
+          name="DashboardArticle"
+          component={DashboardArticle}
           options={{
             tabBarIcon: ({color, size}) => (
               <Entypo name="chat" size={30} color={color} />
