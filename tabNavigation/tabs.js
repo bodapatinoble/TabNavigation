@@ -108,7 +108,7 @@ function Tabs() {
           }}
         />
         {/*------------------------------------------- CHAT SCREEN ----------------------------------------------------*/}
-        <TabNav.Screen
+        {/* <TabNav.Screen
           name="Chat"
           component={Chat}
           options={{
@@ -121,7 +121,7 @@ function Tabs() {
               <Entypo name="chat" size={30} color={color} />
             ),
           }}
-        />
+        /> */}
         {/*------------------------------------------- SETTINGS SCREEN ----------------------------------------------------*/}
         <TabNav.Screen
           name="Welcome"
@@ -142,7 +142,7 @@ function HomeScreen() {
     <Stack.Navigator>
       <Stack.Screen name="Categories" component={Categories} />
       <Stack.Screen name="ListCategories" component={ListCategories} />
-      <Stack.Screen name="ChatScreen" component={Chat} />
+      {/* <Stack.Screen name="ChatScreen" component={Chat} />*/}
       <Stack.Screen name="Userlist" component={USerlist} />
       <Stack.Screen name="FullDetailsScreen" component={FullDetailsScreen} />
     </Stack.Navigator>

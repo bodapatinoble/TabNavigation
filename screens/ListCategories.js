@@ -26,7 +26,7 @@ const ListCategories = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const {type} = route.params;
-  // console.log('Type:', type);
+  console.log('Type:', type);
   const addshoppingItem = async newItem => {
     console.log('Item added:', newItem);
     try {
@@ -97,31 +97,34 @@ const ListCategories = () => {
                 style={styles.image}
               />
               <View style={styles.details}>
-                <Text style={styles.title}>{item.data.title}</Text>
+                <Text style={styles.title}>{item.data.Title}</Text>
                 <Text style={styles.rating}>
-                  {item.data.NumOfAvailableItems < 5
-                    ? `Only ${item.data.NumOfAvailableItems} Left`
-                    : 'InStock'}
+                  {item.data.TotalQuantity == item.data.Quantity
+                    ? 'Stock Unavailable'
+                    : `Only ${item.data.TotalQuantity} Left`}
+                  {/*  (item.data.TotalQuantity < 5
+                    ? `Only ${item.data.TotalQuantity} Left`
+                 : 'InStock')}*/}
                 </Text>
                 <View style={styles.ratingContainer}>
                   <Text style={styles.price}>
-                    Rs.{item.data.price - item.data.discount}
+                    Rs.{item.data.Price - item.data.Discount}
                   </Text>
                   <Text style={styles.discount}>
-                    ₹{item.data.discount} /- OFF
+                    ₹{item.data.Discount} /- OFF
                   </Text>
                 </View>
-                <Text style={styles.description}>{item.data.description}</Text>
+                <Text style={styles.description}>{item.data.Description}</Text>
               </View>
             </TouchableOpacity>
-            <View style={styles.content}>
-              {/* AddItem button */}
+           {/*  <View style={styles.content}>
+              // AddItem button 
               <TouchableOpacity
                 style={styles.addButton}
                 onPress={() => setModalVisible(true)}>
                 <Text style={styles.buttontext}>Add Item</Text>
               </TouchableOpacity>
-              {/* AddItemModal component */}
+              // AddItemModal component 
               <AddItemModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
@@ -132,7 +135,7 @@ const ListCategories = () => {
                   setModalVisible(false);
                 }}
               />
-            </View>
+            </View> */}
           </>
         );
       }}
@@ -145,27 +148,27 @@ const ListCategories = () => {
           }
         </View>;
       }}
-      // ListFooterComponent={
-      //   <View style={styles.content}>
-      //     {/* AddItem button */}
-      //     <TouchableOpacity
-      //       style={styles.addButton}
-      //       onPress={() => setModalVisible(true)}>
-      //       <Text style={styles.buttontext}>Add Item</Text>
-      //     </TouchableOpacity>
-      //     {/* AddItemModal component */}
-      //     <AddItemModal
-      //       visible={modalVisible}
-      //       onClose={() => setModalVisible(false)}
-      //       onAddItem={newItem => {
-      //         newItem.type = type;
-      //         console.log('Item added:', newItem);
-      //         addshoppingItem(newItem);
-      //         setModalVisible(false);
-      //       }}
-      //     />
-      //   </View>
-      // }
+      ListFooterComponent={
+        <View style={styles.content}>
+          {/* AddItem button */}
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => setModalVisible(true)}>
+            <Text style={styles.buttontext}>Add Item</Text>
+          </TouchableOpacity>
+          {/* AddItemModal component */}
+          <AddItemModal
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onAddItem={newItem => {
+              newItem.type = type;
+              console.log('Item added:', newItem);
+              addshoppingItem(newItem);
+              setModalVisible(false);
+            }}
+          />
+        </View>
+      }
     />
   );
 };

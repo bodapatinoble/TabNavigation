@@ -17,6 +17,8 @@ import {
   doc,
   getDocs,
   getDoc,
+  setDoc,
+  updateDoc,
 } from '../FirebaseConfig';
 // Function to fetch document data from Firestore based on its ID
 async function fetchDocumentData(documentId, AssignednumOfAvailableItems) {
@@ -26,7 +28,13 @@ async function fetchDocumentData(documentId, AssignednumOfAvailableItems) {
 
     if (documentSnapshot.exists()) {
       const documentData = documentSnapshot.data();
-      console.log('Document data:', documentData);
+      // console.log('Document data:', documentData);
+      await updateDoc(documentRef, {Quantity: AssignednumOfAvailableItems});
+      console.log(
+        'documentData added to cart list. ------>> Firebase -------------------->>',
+        documentData,
+      );
+
       addToCart(documentData, documentId, AssignednumOfAvailableItems);
     } else {
       console.log('Document not found!');
@@ -40,27 +48,42 @@ let cartList = []; // Array to store cart items in memory
 // Function to add item to cart list or update quantity if item already exists
 function addToCart(item, itemId, AssignednumOfAvailableItems) {
   // Check if item with same ID exists in cart list
+  // console.log(
+  //   'Document not found! ------------------------->',
+  //   AssignednumOfAvailableItems,
+  // );
   const existingItemIndex = cartList.findIndex(
     cartItem => cartItem.id === itemId,
   );
-  item.quantity = AssignednumOfAvailableItems;
+  item.Quantity = AssignednumOfAvailableItems;
   if (existingItemIndex !== -1) {
     // If item already exists, update its quantity
     cartList[existingItemIndex].quantity = item.quantity;
-    console.log('Item quantity updated in cart list.', cartList);
+    // console.log('Item quantity updated in cart list.', cartList);
   } else {
     // If item doesn't exist, add it to the cart list
     item.id = itemId;
     cartList.push(item);
-    console.log('Item added to cart list.', item);
+    // console.log('Item added to cart list.', item);
   }
 }
 const FullDetailsScreen = ({route}) => {
-  const {description, price, image, type, title, TotalNumOfAvailableItems} =
-    route.params.item.data;
+  const {
+    Description,
+    Discount,
+    Price,
+    Quantity,
+    Title,
+    image,
+    type,
+    TotalQuantity,
+  } = route.params.item.data;
   console.log(
     'afssdfsdfadsf534-----------------.........>>>>>',
-    route.params.item.id,
+    Title,
+    Description,
+    Price,
+    route.params.item.data,
   );
 
   const [numOfAvailableItems, setNumOfAvailableItems] = useState(1);
@@ -78,13 +101,18 @@ const FullDetailsScreen = ({route}) => {
   const decreaseAvailableItems = () => {
     if (numOfAvailableItems > 0) {
       setNumOfAvailableItems(
-        numOfAvailableItems - 1 == 0 ? 1 : numOfAvailableItems - 1,
+        numOfAvailableItems - 1 === 0 ? 1 : numOfAvailableItems - 1,
       );
     }
   };
 
   const increaseAvailableItems = () => {
-    if (numOfAvailableItems == TotalNumOfAvailableItems) {
+    console.log(
+      'Arey increasing the the button values arey ',
+      numOfAvailableItems,
+      TotalQuantity,
+    );
+    if (numOfAvailableItems == TotalQuantity) {
       createTwoButtonAlert();
     } else {
       setNumOfAvailableItems(numOfAvailableItems + 1);
@@ -131,17 +159,21 @@ const FullDetailsScreen = ({route}) => {
           style={styles.image}
         />
         <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>{Title}</Text>
           <View style={styles.priceContainer}>
-            <Text style={styles.price}>Price: ${price}</Text>
-            <Text style={styles.discount}>Price: ${price}</Text>
+            <Text style={styles.price}>Price: ${Price}</Text>
+            <Text style={styles.discount}>Price: ${Price}</Text>
           </View>
-          <Text style={styles.description}>{description}</Text>
-          <Text style={styles.availabilityContainer}>
-            Remaining Items {TotalNumOfAvailableItems - numOfAvailableItems}{' '}
-            Left
-          </Text>
-          <View style={styles.quantityContainer}>
+          <Text style={styles.description}>{Description}</Text>
+          {/* <Text style={styles.availabilityContainer}>
+            Remaining Items {TotlaQuantity - numOfAvailableItems} Left
+          </Text> */}
+          <View
+            style={
+              route.params.item.data.Quantity == route.params.item.data.TotalQuantity
+                ? {display: 'none'}
+                : styles.quantityContainer
+            }>
             <TouchableOpacity
               style={styles.quantityButton}
               onPress={decreaseAvailableItems}>
@@ -210,7 +242,7 @@ const FullDetailsScreen = ({route}) => {
           </TouchableOpacity>
         </Modal>
       ) : (
-        <View></View>
+        <View />
       )}
     </>
   );

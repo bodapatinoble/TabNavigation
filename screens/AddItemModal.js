@@ -11,11 +11,13 @@ import {
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker'; // Import ImagePicker
 
 const AddItemModal = ({visible, onClose, onAddItem}) => {
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
-  const [discount, setDiscount] = useState('');
-  const [description, setDescription] = useState('');
-  const [NumOfAvailableItems, setNumOfAvailableItems] = useState('');
+  const [Title, setTitle] = useState('');
+  const [Price, setPrice] = useState('');
+  const [Discount, setDiscount] = useState('');
+  const [Description, setDescription] = useState('');
+  const [TotalQuantity, setTotalQuantity] = useState('');
+  const [Quantity, setNumOfAvailableItems] = useState('');
+
   const [isAvailable, setisAvailable] = useState('');
   const [isDeleted, setisDeleted] = useState('');
   const [image, setImage] = useState(null); // State to store the selected image URI
@@ -44,17 +46,18 @@ const AddItemModal = ({visible, onClose, onAddItem}) => {
   const handleAddItem = () => {
     // Validate input fields and add item
     if (
-      title.trim() !== '' &&
-      price.trim() !== '' &&
-      description.trim() !== ''
+      Title.trim() !== '' &&
+      Price.trim() !== '' &&
+      Description.trim() !== ''
     ) {
       onAddItem({
-        title,
-        price,
-        description,
         image,
-        discount,
-        NumOfAvailableItems,
+        Title,
+        Description,
+        Price,
+        Discount,
+        TotalQuantity,
+        Quantity,
         isAvailable,
         isDeleted,
       });
@@ -63,7 +66,7 @@ const AddItemModal = ({visible, onClose, onAddItem}) => {
       setPrice('');
       setDescription('');
       setDiscount('');
-      setNumOfAvailableItems('');
+      setTotalQuantity(1);
       setisAvailable('');
       setisDeleted('');
       setImage(null);
@@ -89,32 +92,32 @@ const AddItemModal = ({visible, onClose, onAddItem}) => {
           <TextInput
             style={styles.input}
             placeholder="Title"
-            value={title}
+            value={Title}
             onChangeText={text => setTitle(text)}
           />
           <TextInput
             style={styles.input}
             placeholder="Price"
-            value={price}
+            value={Price}
             onChangeText={text => setPrice(text)}
           />
           <TextInput
             style={styles.input}
             placeholder="Number Of Items"
-            value={NumOfAvailableItems}
-            onChangeText={text => setNumOfAvailableItems(text)}
+            value={TotalQuantity}
+            onChangeText={text => setTotalQuantity(text)}
           />
           <TextInput
             style={styles.input}
             placeholder="Discount"
-            value={discount}
+            value={Discount}
             onChangeText={text => setDiscount(text)}
           />
           <TextInput
             style={[styles.input, {height: 100}]}
             placeholder="Description"
             multiline={true}
-            value={description}
+            value={Description}
             onChangeText={text => setDescription(text)}
           />
           <TouchableOpacity style={styles.addButton} onPress={handleAddItem}>

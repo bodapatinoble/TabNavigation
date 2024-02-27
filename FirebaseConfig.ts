@@ -8,6 +8,8 @@ import {
   addDoc,
   getDocs,
   getDoc,
+  updateDoc,
+  setDoc,
   doc,
 } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -29,4 +31,4 @@ const firebaseConfig = {
 export const Firebase_App = initializeApp(firebaseConfig);
 export const Firebase_Auth = getAuth(Firebase_App);
 export const Firebase_DB = getFirestore(Firebase_App);
-export {collection, addDoc, getDocs, doc, getDoc};
+export {collection, addDoc, getDocs, doc, getDoc, updateDoc, setDoc};
